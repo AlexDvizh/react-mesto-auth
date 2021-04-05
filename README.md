@@ -1,7 +1,38 @@
-# Здесь будет ваш проект на Реакте с авторизацией и регистрацией
+# Проект 5: Место
 
-Используйте ваши предыдущие наработки по проекту Mesto. Это может быть работа 11-го спринта или его улучшенная версия после 2-х последних спринтов. 
+https://alexdvizh.github.io/mesto-react/
 
-Все запросы на авторизацию, регистрацию и проверку токена должны работать через сервис `https://auth.nomoreparties.co`. Остальные запросы, не относящиеся к этой проектной работе могут быть к бэкенду из предыдущих спринтов.
+### Обзор
+* Описание
+* Технологии
 
-Успехов!
+**Описание**
+
+Это проект о путешествиях, где любой пользователь сможет поделиться своими фото и информацией о себе.
+
+**Технологии**
+
+Проект частично переписан используя библиотеку React. В проекте применяется технология хуков. Добавлены компоненты.
+
+**Команды**
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
