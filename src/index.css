@@ -71,3 +71,5 @@
 @import url('./blocks/login-form/__input/_login-email/login-form__input_login-email.css');
 @import url('./blocks/login-form/__input/_login-pass/login-form__input_login-pass.css');
 @import url('./blocks/login-form/__button/login-form__button.css');
+
+@import url('./blocks/infoTooltip/infoTooltip.css');

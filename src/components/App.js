@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter, Route, Redirect, Switch, useHistory } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
@@ -11,6 +11,9 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import Login from './Login.js';
 import Register from './Register';
+import ProtectedRoute from './ProtectedRoute';
+import { register, authorization } from '../utils/auth';
+import InfoTooltip from './InfoTooltip';
 
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
@@ -27,6 +30,10 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   //хук состояния карточек
   const [cards, setCards] = React.useState([]);
+  //хук авторизации пользователя(вошел в систему или нет)
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [message, setMessage] = useState(false);
+  const history = useHistory()
 
   React.useEffect(() => {
     api
@@ -130,27 +137,65 @@ function App() {
       });
   }
 
+  function onRegister(email, password) {
+    register(password, email)
+      .then((res) => {
+        history.push('/sign-up')
+      })
+  }
+
+  function onLogin(email, password) {
+    authorization(email, password)
+      .then((res) => {
+        if(res) {
+          setLoggedIn(true);
+          history.push('/');
+        }
+
+      })
+  }
+
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
-        <Login />
-        <Register />
-        <Main 
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          cards={cards}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
+        <Switch>
+          <ProtectedRoute
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+            component={Main}
+            exact path="/"
+            loggedIn={loggedIn}
+          />
+          <ProtectedRoute 
+            component={Footer}
+            exact path="/"
+            loggedIn={loggedIn}
+          />
+          <Route path="/sign-in">
+            <Login 
+              onLogin={onLogin}
+            />
+          </Route>
+          <Route path="/sign-up">
+            <Register 
+              onRegister={onRegister}
+            />
+          </Route>
+          <Route>
+            {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in"/>}
+          </Route>
+        </Switch>
+        <InfoTooltip
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          status={message}
         />
-        
-        <Route path="/sign-in">
-          <Login />
-        </Route>
-        <Route path="/sign-up" component={Register} />
-        <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}

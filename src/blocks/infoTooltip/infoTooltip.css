@@ -1,0 +1,7 @@
+.infoTooltip {
+  display: flex;
+  height: 330px;
+  width: 430px;
+  background-color: #FFFFFF;
+  position: relative;
+}
