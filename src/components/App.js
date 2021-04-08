@@ -60,6 +60,10 @@ function App() {
       });
   }, []);
 
+  React.useEffect(() => {
+    checkToken();
+  })
+
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some(i => i._id === currentUser._id);
@@ -100,7 +104,7 @@ function App() {
     setAddPlacePopupOpen(false);
     setEditAvatarPopupOpen(false);
     setSelectedCard(null);
-    setIsInfoTooltip(false);
+    setIsInfoTooltipOpen(false);
   }
 
   function handleCardClick(card) {
@@ -146,10 +150,11 @@ function App() {
   function onRegister(email, password) {
     register(password, email)
       .then((res) => {
+        console.log(res)
         setIsInfoTooltipOpen(true);
         if(res) {
-          history.push('/sign-in');
           setMessage(true);
+          history.push('/sign-in');
         } else {
           setMessage(false);
         }
@@ -157,7 +162,7 @@ function App() {
   }
 
   function onLogin(email, password) {
-    authorization(email, password)
+    authorization(password, email)
       .then((res) => {
         if(res) {
           setLoggedIn(true);
@@ -172,7 +177,17 @@ function App() {
   }
 
   function checkToken() {
-
+    const token = localStorage.getItem('jwt');
+    if(token) {
+      validityToken(token)
+      .then((res) => {
+        if(res) {
+          setUserEmailOnHeader(res.data.email)
+        };
+        setLoggedIn(true);
+        history.push('/');
+      })
+    }
   }
 
   return (
@@ -181,11 +196,7 @@ function App() {
         <Header 
           userEmailOnHeader={userEmailOnHeader}
         />
-        <InfoTooltip
-          isOpen={isInfoTooltipOpen}
-          onClose={closeAllPopups}
-          status={message}
-        />
+
         <Switch>
           <ProtectedRoute
             onEditProfile={handleEditProfileClick}
@@ -218,7 +229,11 @@ function App() {
             {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-up"/>}
           </Route>
         </Switch>
-        
+        <InfoTooltip
+          isOpen={isInfoTooltipOpen}
+          onClose={closeAllPopups}
+          status={message}
+        />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}

@@ -8,31 +8,33 @@ function getResponse(res) {
     return Promise.reject(`Ошибка ${res.status}`);
 }
 
-export const register = (email, password) => {
+export const register = (password, email) => {
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({email, password})
+    body: JSON.stringify({password, email})
   })
   .then((res) => {
-    getResponse(res)
+    console.log(res)
+    return getResponse(res)
   })
   .catch((err) => console.log(err));
 };
 
-export const authorization = (email, password) => {
+export const authorization = (password, email) => {
   return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
     headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({email, password})
+    body: JSON.stringify({password, email})
   })
   .then((res) => {
-    getResponse(res)
+    return getResponse(res)
   })
   .catch((err) => console.log(err));
 }
