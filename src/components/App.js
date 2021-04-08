@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Route, Redirect, Switch, useHistory } from 'react-router-dom';
+import { Route, Redirect, Switch, useHistory } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
@@ -12,28 +12,33 @@ import AddPlacePopup from './AddPlacePopup';
 import Login from './Login.js';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
-import { register, authorization } from '../utils/auth';
+import { register, authorization, validityToken } from '../utils/auth';
 import InfoTooltip from './InfoTooltip';
 
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
 function App() {
   //хук состояния открытия поп-апа профиля
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false); 
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false); 
   //хук состояния открытия поп-апа добавления новой карточки
-  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
+  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   //хук состояния открытия поп-апа аватара
-  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
+  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   //хук состояния открытия поп-апа большого фото
-  const [selectedCard, setSelectedCard] = React.useState(null);
+  const [selectedCard, setSelectedCard] = useState(null);
   //хук состояния текущего пользователя
-  const [currentUser, setCurrentUser] = React.useState({});
+  const [currentUser, setCurrentUser] = useState({});
   //хук состояния карточек
-  const [cards, setCards] = React.useState([]);
+  const [cards, setCards] = useState([]);
   //хук авторизации пользователя(вошел в систему или нет)
   const [loggedIn, setLoggedIn] = useState(false);
+  //хук состояния открытия поп-апа с оповещением при авторизации
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  //хук сообщения об успешной/неудачной авторизации
   const [message, setMessage] = useState(false);
-  const history = useHistory()
+  //хук получения почты пользователя, для отображения в хедере
+  const [userEmailOnHeader, setUserEmailOnHeader] = useState('');
+  const history = useHistory();
 
   React.useEffect(() => {
     api
@@ -95,6 +100,7 @@ function App() {
     setAddPlacePopupOpen(false);
     setEditAvatarPopupOpen(false);
     setSelectedCard(null);
+    setIsInfoTooltip(false);
   }
 
   function handleCardClick(card) {
@@ -140,7 +146,13 @@ function App() {
   function onRegister(email, password) {
     register(password, email)
       .then((res) => {
-        history.push('/sign-up')
+        setIsInfoTooltipOpen(true);
+        if(res) {
+          history.push('/sign-in');
+          setMessage(true);
+        } else {
+          setMessage(false);
+        }
       })
   }
 
@@ -149,16 +161,31 @@ function App() {
       .then((res) => {
         if(res) {
           setLoggedIn(true);
+          setUserEmailOnHeader(email);
           history.push('/');
+          localStorage.setItem('jwt', res.token);
+        } else {
+          setIsInfoTooltipOpen(true);
+          setMessage(false);
         }
-
       })
+  }
+
+  function checkToken() {
+
   }
 
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header />
+        <Header 
+          userEmailOnHeader={userEmailOnHeader}
+        />
+        <InfoTooltip
+          isOpen={isInfoTooltipOpen}
+          onClose={closeAllPopups}
+          status={message}
+        />
         <Switch>
           <ProtectedRoute
             onEditProfile={handleEditProfileClick}
@@ -188,14 +215,10 @@ function App() {
             />
           </Route>
           <Route>
-            {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in"/>}
+            {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-up"/>}
           </Route>
         </Switch>
-        <InfoTooltip
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          status={message}
-        />
+        
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}

@@ -8,14 +8,14 @@ function getResponse(res) {
     return Promise.reject(`Ошибка ${res.status}`);
 }
 
-export const register = (password, email) => {
+export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
-    headears: {
+    headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({password, email})
+    body: JSON.stringify({email, password})
   })
   .then((res) => {
     getResponse(res)
@@ -26,10 +26,24 @@ export const register = (password, email) => {
 export const authorization = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
-    headears: {
+    headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({email, password})
+  })
+  .then((res) => {
+    getResponse(res)
+  })
+  .catch((err) => console.log(err));
+}
+
+export const validityToken = (token) => {
+  return fetch(`${BASE_URL}/user/me`, {
+    method: 'GET',
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization" : `Bearer ${token}`
+    } 
   })
   .then((res) => {
     getResponse(res)

@@ -30,7 +30,7 @@ const Register = ({onRegister}) => {
       <button className="login-form__button" type="submit">Зарегистрироваться</button>
       <div className="login-form__text">
         Уже зарегистрированы? 
-        <Link to="/sing-in" className="login-form__link">Войти</Link>
+        <Link to="/sign-in" className="login-form__link">Войти</Link>
       </div>
     </form>
   )
