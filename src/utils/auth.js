@@ -48,7 +48,7 @@ export const validityToken = (token) => {
     } 
   })
   .then((res) => {
-    getResponse(res)
+    return getResponse(res)
   })
   .catch((err) => console.log(err));
 }

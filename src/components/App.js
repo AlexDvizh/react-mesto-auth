@@ -190,11 +190,18 @@ function App() {
     }
   }
 
+  function logoutProfile() {
+    localStorage.removeItem('jwt');
+    history.push('/sign-in');
+    setLoggedIn(false);
+  }
+
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         <Header 
           userEmailOnHeader={userEmailOnHeader}
+          logoutProfile={logoutProfile}
         />
 
         <Switch>

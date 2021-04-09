@@ -3,7 +3,7 @@ import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import headerLogo from '../images/logo.svg'
 
-function Header({userEmailOnHeader}) {
+function Header({userEmailOnHeader, logoutProfile}) {
   const location = useLocation();
 
   return (
@@ -21,6 +21,7 @@ function Header({userEmailOnHeader}) {
             : "/sing-in"
             }
             className="header__link header__link_exit"
+            onClick={location.pathname === "/" ? logoutProfile : () => {}}
           >
             {
               location.pathname === "/sign-up"
