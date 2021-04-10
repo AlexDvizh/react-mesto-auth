@@ -150,15 +150,16 @@ function App() {
   function onRegister(email, password) {
     register(password, email)
       .then((res) => {
-        console.log(res)
         setIsInfoTooltipOpen(true);
         if(res) {
           setMessage(true);
           history.push('/sign-in');
-        } else {
-          setMessage(false);
         }
       })
+      .catch((err) => {
+        console.log(err);
+        setMessage(false);
+      });
   }
 
   function onLogin(email, password) {
@@ -171,9 +172,12 @@ function App() {
           localStorage.setItem('jwt', res.token);
         } else {
           setIsInfoTooltipOpen(true);
-          setMessage(false);
         }
       })
+      .catch((err) => {
+        console.log(err);
+        setMessage(false);
+      });
   }
 
   function checkToken() {
@@ -187,6 +191,9 @@ function App() {
         setLoggedIn(true);
         history.push('/');
       })
+      .catch((err) => {
+        console.log(err);
+      });
     }
   }
 

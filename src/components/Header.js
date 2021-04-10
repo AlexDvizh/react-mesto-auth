@@ -14,11 +14,11 @@ function Header({userEmailOnHeader, logoutProfile}) {
             {location.pathname === "/" ? userEmailOnHeader : ""}
           </p>
           <Link to={
-            location.pathname === "/sing-up"
-            ? "/sing-in" 
-            : location.pathname === "/sing-in"
-            ? "/sing-up"
-            : "/sing-in"
+            location.pathname === "/sign-up"
+            ? "/sign-in" 
+            : location.pathname === "/sign-in"
+            ? "/sign-up"
+            : "/sign-in"
             }
             className="header__link header__link_exit"
             onClick={location.pathname === "/" ? logoutProfile : () => {}}

@@ -21,7 +21,6 @@ export const register = (password, email) => {
     console.log(res)
     return getResponse(res)
   })
-  .catch((err) => console.log(err));
 };
 
 export const authorization = (password, email) => {
@@ -36,7 +35,6 @@ export const authorization = (password, email) => {
   .then((res) => {
     return getResponse(res)
   })
-  .catch((err) => console.log(err));
 }
 
 export const validityToken = (token) => {
@@ -50,6 +48,5 @@ export const validityToken = (token) => {
   .then((res) => {
     return getResponse(res)
   })
-  .catch((err) => console.log(err));
 }
 
