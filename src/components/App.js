@@ -156,9 +156,9 @@ function App() {
           history.push('/sign-in');
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         setMessage(false);
+        setIsInfoTooltipOpen(true);
       });
   }
 
@@ -170,13 +170,11 @@ function App() {
           setUserEmailOnHeader(email);
           history.push('/');
           localStorage.setItem('jwt', res.token);
-        } else {
-          setIsInfoTooltipOpen(true);
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         setMessage(false);
+        setIsInfoTooltipOpen(true);
       });
   }
 
